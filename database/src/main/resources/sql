@@ -1,0 +1,44 @@
+I'll create two simple MySQL tables with a foreign key relationship.
+
+First table will be `customers` and second table will be `orders` with a foreign key reference to customers.
+
+```sql
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_amount DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);
+```
+
+This creates a simple one-to-many relationship where one customer can have multiple orders. The `customer_id` in the `orders` table is a foreign key that references the primary key in the `customers` table.
+
+
+-- Populate customers table
+INSERT INTO customers (first_name, last_name, email, phone) VALUES
+('John', 'Doe', 'john.doe@example.com', '555-123-4567'),
+('Jane', 'Smith', 'jane.smith@example.com', '555-234-5678'),
+('Michael', 'Johnson', 'michael.j@example.com', '555-345-6789'),
+('Emily', 'Brown', 'emily.b@example.com', '555-456-7890'),
+('David', 'Williams', 'david.w@example.com', '555-567-8901');
+
+-- Populate orders table
+INSERT INTO orders (customer_id, order_date, total_amount, status) VALUES
+(1, '2024-03-10 14:30:00', 125.50, 'Completed'),
+(1, '2024-04-15 09:15:00', 78.99, 'Shipped'),
+(2, '2024-04-12 16:45:00', 249.99, 'Processing'),
+(3, '2024-04-10 11:20:00', 59.95, 'Completed'),
+(2, '2024-04-16 13:10:00', 149.50, 'Pending'),
+(4, '2024-04-14 10:30:00', 89.99, 'Shipped'),
+(5, '2024-04-13 15:45:00', 199.95, 'Processing');
